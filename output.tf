@@ -1,11 +1,21 @@
 output "monthly_s3_cost_estimate_usd" {
-  description = "Estimativa de custo mensal do bucket (USD)"
+  description = "Estimativa mensal de custo S3 (USD) com breakdown"
   value = format(
-    "≈ $%.2f / mês  [armazenamento: %.0f GB × $%.4f  |  %d PUT × $%.4f/1k]",
+    "≈ $%.2f/mes [dados: $%.2f | logs: $%.2f | PUT: $%.2f | GET: $%.2f]",
     local.monthly_cost_usd,
-    var.estimated_cost_storage,
-    var.price_per_gb,
-    var.put_request_count,
-    var.price_per_1000_put
+    local.main_storage_cost_usd,
+    local.log_storage_cost_usd,
+    local.put_request_cost_usd,
+    local.get_request_cost_usd
   )
+}
+
+output "main_bucket_name" {
+  description = "Main data bucket name"
+  value       = aws_s3_bucket.s3_bucket_finops.bucket
+}
+
+output "log_bucket_name" {
+  description = "Access logs bucket name"
+  value       = aws_s3_bucket.log_bucket.bucket
 }
