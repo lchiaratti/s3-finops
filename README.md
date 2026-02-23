@@ -1,6 +1,6 @@
 ## S3 FinOps
 
-Projeto Terraform para criar um bucket S3 com foco em boas praticas de FinOps.
+Esse Projeto Terraform tem como objetivo criar uma bucket S3 com foco em boas praticas de FinOps.
 
 ## O que este projeto cria
 - 1 bucket principal para dados.
