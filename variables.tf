@@ -59,15 +59,26 @@ variable "get_request_count" {
 }
 
 variable "ia_transition_days" {
-  description = "Days before transitioning objects to STANDARD_IA"
+  description = "Days before transitioning objects to STANDARD_IA (minimum 30 — AWS charges full 30 days regardless)"
   type        = number
   default     = 30
+
+  validation {
+    condition     = var.ia_transition_days >= 30
+    error_message = "S3 Standard-IA tem duração mínima cobrada de 30 dias. Valores menores geram custo inesperado."
+  }
 }
 
 variable "log_retention_days" {
   description = "Retention (days) for server access logs in log bucket"
   type        = number
   default     = 30
+}
+
+variable "abort_multipart_days" {
+  description = "Days after initiation to abort incomplete multipart uploads"
+  type        = number
+  default     = 7
 }
 
 /* Precos de referencia (fev/2026) para sa-east-1.
@@ -78,16 +89,19 @@ variable "log_retention_days" {
  * (fonte: AWS Price List API, versao 20260218175156)
  */
 variable "price_per_gb_standard" {
-  type    = number
-  default = 0.0405
+  description = "Custo por GB-mês em S3 Standard (USD). Ref: $0.0405 para sa-east-1 (primeiros 50 TB)"
+  type        = number
+  default     = 0.0405
 }
 
 variable "price_per_1000_put" {
-  type    = number
-  default = 0.0070
+  description = "Custo por 1.000 requisições PUT/COPY/POST/LIST (USD). Ref: $0.0070 para sa-east-1"
+  type        = number
+  default     = 0.0070
 }
 
 variable "price_per_1000_get" {
-  type    = number
-  default = 0.00056
+  description = "Custo por 1.000 requisições GET (USD). Ref: $0.0056/10.000 req = $0.00056/1.000 req para sa-east-1"
+  type        = number
+  default     = 0.00056
 }

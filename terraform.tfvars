@@ -1,8 +1,5 @@
-aws_region = "sa-east-1"
-
-project_name = "s3-finops"
-environment  = "dev"
-cost_center  = "finops-lab"
+environment = "dev"
+cost_center = "finops-lab"
 
 estimated_main_storage_gb = 20
 estimated_log_storage_gb  = 2

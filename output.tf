@@ -19,3 +19,13 @@ output "log_bucket_name" {
   description = "Access logs bucket name"
   value       = aws_s3_bucket.log_bucket.bucket
 }
+
+output "main_bucket_arn" {
+  description = "ARN of the main data bucket"
+  value       = aws_s3_bucket.s3_bucket_finops.arn
+}
+
+output "log_bucket_arn" {
+  description = "ARN of the access logs bucket"
+  value       = aws_s3_bucket.log_bucket.arn
+}

@@ -9,12 +9,6 @@ locals {
   main_bucket_name = "${var.main_bucket_prefix}-${local.project_slug}-${local.env_slug}-${random_id.suffix.hex}"
   log_bucket_name  = "${var.log_bucket_prefix}-${local.project_slug}-${local.env_slug}-${random_id.suffix.hex}"
 
-  common_tags = {
-    Name        = "${local.project_slug}-${local.env_slug}"
-    Environment = var.environment
-    CostCenter  = var.cost_center
-  }
-
   main_storage_cost_usd = var.estimated_main_storage_gb * var.price_per_gb_standard
   log_storage_cost_usd  = var.estimated_log_storage_gb * var.price_per_gb_standard
   put_request_cost_usd  = (var.put_request_count / 1000) * var.price_per_1000_put
@@ -25,19 +19,13 @@ locals {
 resource "aws_s3_bucket" "s3_bucket_finops" {
   bucket = local.main_bucket_name
 
-  tags = merge(
-    local.common_tags,
-    { Name = local.main_bucket_name }
-  )
+  tags = { Name = local.main_bucket_name }
 }
 
 resource "aws_s3_bucket" "log_bucket" {
   bucket = local.log_bucket_name
 
-  tags = merge(
-    local.common_tags,
-    { Name = local.log_bucket_name }
-  )
+  tags = { Name = local.log_bucket_name }
 }
 
 resource "aws_s3_bucket_public_access_block" "main_bucket_public_access_block" {
@@ -132,7 +120,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "main_bucket_lifecycle" {
     }
 
     abort_incomplete_multipart_upload {
-      days_after_initiation = 7
+      days_after_initiation = var.abort_multipart_days
     }
   }
 }
@@ -162,7 +150,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "log_bucket_lifecycle" {
     }
 
     abort_incomplete_multipart_upload {
-      days_after_initiation = 7
+      days_after_initiation = var.abort_multipart_days
     }
   }
 }
